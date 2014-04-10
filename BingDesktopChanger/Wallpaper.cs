@@ -12,7 +12,6 @@ namespace BingDesktopChanger
     {
         const int SPI_SETDESKWALLPAPER = 20;
         const int SPIF_UPDATEINIFILE = 0x01;
-        const int SPIF_SENDWININICHANGE = 0x02;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
@@ -30,7 +29,7 @@ namespace BingDesktopChanger
 
             Bitmap img = (Bitmap)Image.FromStream(s);
 
-            if (ConfigurationManager.AppSettings["RenderCopyright"] == "true")
+            if (ConfigurationManager.AppSettings["RenderCopyright"] == "true" && !string.IsNullOrWhiteSpace(copyrightText))
             {
                 WriteOnImage(img, copyrightText);
             }
