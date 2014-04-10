@@ -75,7 +75,7 @@ namespace BingDesktopChanger
             {
                 Bitmap bitMapImage = new Bitmap(Image);
 
-                RectangleF rectf = new RectangleF(0, 0, Image.Width, 75);
+                RectangleF rectf = new RectangleF(0, 0, Image.Width, 60);
 
 
                 using (Graphics g = Graphics.FromImage(Image))
@@ -88,7 +88,7 @@ namespace BingDesktopChanger
                     g.SmoothingMode = SmoothingMode.AntiAlias;
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    g.DrawString(textToAdd, new Font("Tahoma", 20), Brushes.White, new PointF(20, 20));
+                    g.DrawString(textToAdd, new Font("Calibri", 17), Brushes.White, new PointF(20, 15));
 
                     g.Flush();
 
