@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.Win32;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace BingDesktopChanger
 {
-    public sealed class Wallpaper
+    public class Wallpaper
     {
-        Wallpaper() { }
-
         const int SPI_SETDESKWALLPAPER = 20;
         const int SPIF_UPDATEINIFILE = 0x01;
         const int SPIF_SENDWININICHANGE = 0x02;
@@ -22,7 +17,7 @@ namespace BingDesktopChanger
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
-        public enum Style : int
+        public enum Style
         {
             Tiled,
             Centered,
@@ -33,7 +28,7 @@ namespace BingDesktopChanger
         {
             Stream s = new System.Net.WebClient().OpenRead(uri);
 
-            System.Drawing.Bitmap img = (Bitmap)System.Drawing.Bitmap.FromStream(s);
+            Bitmap img = (Bitmap)Image.FromStream(s);
 
             if (ConfigurationManager.AppSettings["RenderCopyright"] == "true")
             {
@@ -65,41 +60,26 @@ namespace BingDesktopChanger
             SystemParametersInfo(SPI_SETDESKWALLPAPER,
                 0,
                 tempPath,
-                SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+                SPIF_UPDATEINIFILE);
         }
 
-        public static string WriteOnImage(Bitmap Image, string textToAdd)
+        public static void WriteOnImage(Bitmap Image, string textToAdd)
         {
-            string Message = "OK";
-            try
+            var copyrightContainer = new RectangleF(0, 0, Image.Width, 60);
+            
+            using (Graphics g = Graphics.FromImage(Image))
             {
-                Bitmap bitMapImage = new Bitmap(Image);
+                Color transparentGray = Color.FromArgb(150, Color.Gray);
+                SolidBrush copyrightContainerBrush = new SolidBrush(transparentGray);
+                g.FillRectangles(copyrightContainerBrush, new[] { copyrightContainer });
 
-                RectangleF rectf = new RectangleF(0, 0, Image.Width, 60);
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.DrawString(textToAdd, new Font("Calibri", 17), Brushes.White, new PointF(20, 15));
 
-
-                using (Graphics g = Graphics.FromImage(Image))
-                {
-
-                    Color customColor = Color.FromArgb(150, Color.Gray);
-                    SolidBrush shadowBrush = new SolidBrush(customColor);
-                    g.FillRectangles(shadowBrush, new RectangleF[] { rectf });
-
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    g.DrawString(textToAdd, new Font("Calibri", 17), Brushes.White, new PointF(20, 15));
-
-                    g.Flush();
-
-                };
-
-                return Message;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                g.Flush();
+            };
         }
     }
 }
