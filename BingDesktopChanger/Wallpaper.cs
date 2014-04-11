@@ -62,23 +62,60 @@ namespace BingDesktopChanger
                 SPIF_UPDATEINIFILE);
         }
 
-        public static void WriteOnImage(Bitmap Image, string textToAdd)
+        public static void WriteOnImage(Bitmap image, string textToAdd)
         {
-            var copyrightContainer = new RectangleF(0, 0, Image.Width, 60);
-            
-            using (Graphics g = Graphics.FromImage(Image))
+            using (var graphics = Graphics.FromImage(image))
             {
-                Color transparentGray = Color.FromArgb(150, Color.Gray);
-                SolidBrush copyrightContainerBrush = new SolidBrush(transparentGray);
-                g.FillRectangles(copyrightContainerBrush, new[] { copyrightContainer });
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                g.DrawString(textToAdd, new Font("Calibri", 17), Brushes.White, new PointF(20, 15));
+                bool fits;
+                var size = 17;
+                var offset = new PointF(20, 15);
 
-                g.Flush();
-            };
+                var copyrightContainer = CreateCopyrightContainer(image, graphics);
+
+                Font copyrightFont = null;
+
+                do
+                {
+                    if (copyrightFont != null)
+                    {
+                        copyrightFont.Dispose();
+                    }
+
+                    copyrightFont = new Font("Calibri", size);
+
+                    fits = DoesTextFitInContainer(textToAdd, graphics, copyrightFont, offset, copyrightContainer);
+
+                    size -= 1;
+
+                }
+                while (!fits);
+
+                graphics.DrawString(textToAdd, copyrightFont, Brushes.White, offset);
+
+                graphics.Flush();
+            }
+        }
+
+        private static bool DoesTextFitInContainer(string textToAdd, Graphics graphics, Font copyrightFont, PointF offset, RectangleF copyrightContainer)
+        {
+            var copyrightSize = graphics.MeasureString(textToAdd, copyrightFont);
+
+            var fits = copyrightSize.Width + offset.Y < copyrightContainer.Width;
+
+            return fits;
+        }
+
+        private static RectangleF CreateCopyrightContainer(Bitmap image, Graphics graphics)
+        {
+            var copyrightContainer = new RectangleF(0, 0, image.Width, 60);
+            Color transparentGray = Color.FromArgb(150, Color.Gray);
+            SolidBrush copyrightContainerBrush = new SolidBrush(transparentGray);
+            graphics.FillRectangle(copyrightContainerBrush, copyrightContainer);
+            return copyrightContainer;
         }
     }
 }

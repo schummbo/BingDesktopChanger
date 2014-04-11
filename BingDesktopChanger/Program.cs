@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.Net;
 using System.Text;
@@ -52,7 +53,7 @@ namespace BingDesktopChanger
 
                 try
                 {
-                    Wallpaper.Set(string.Format("{0}{1}_{2}", "http://www.bing.com", urlBase, "1920x1200.jpg"), Wallpaper.Style.Stretched, copyright);
+                    Wallpaper.Set(string.Format("{0}{1}_{2}", "http://www.bing.com", urlBase, "1920x1200.jpg"), (Wallpaper.Style)Enum.Parse(typeof(Wallpaper.Style),ConfigurationManager.AppSettings["WallpaperFitMode"]), copyright);
                 }
                 catch (Exception ex)
                 {
