@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace BingDesktopChanger
@@ -11,6 +12,13 @@ namespace BingDesktopChanger
     {
         static void Main(string[] args)
         {
+            int delaySeconds = int.Parse(ConfigurationManager.AppSettings["ProcessDelaySeconds"]);
+
+            if (delaySeconds > 0)
+            {
+                Thread.Sleep(delaySeconds * 1000);
+            }
+
             using (var webClient = new WebClient { Encoding = Encoding.UTF8 })
             {
                 XElement xml;
