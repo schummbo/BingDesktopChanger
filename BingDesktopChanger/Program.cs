@@ -12,13 +12,6 @@ namespace BingDesktopChanger
     {
         static void Main(string[] args)
         {
-            int delaySeconds = int.Parse(ConfigurationManager.AppSettings["ProcessDelaySeconds"]);
-
-            if (delaySeconds > 0)
-            {
-                Thread.Sleep(delaySeconds * 1000);
-            }
-
             using (var webClient = new WebClient { Encoding = Encoding.UTF8 })
             {
                 XElement xml;
