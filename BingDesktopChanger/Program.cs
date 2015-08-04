@@ -54,7 +54,9 @@ namespace BingDesktopChanger
 
                 try
                 {
-                    Wallpaper.Set(string.Format("{0}{1}_{2}", "http://www.bing.com", urlBase, "1920x1200.jpg"), (Wallpaper.Style)Enum.Parse(typeof(Wallpaper.Style),ConfigurationManager.AppSettings["WallpaperFitMode"]), copyright);
+                    string resolution = ConfigurationManager.AppSettings["Resolution"];
+
+                    Wallpaper.Set(string.Format("{0}{1}_{2}.jpg", "http://www.bing.com", urlBase, resolution), (Wallpaper.Style)Enum.Parse(typeof(Wallpaper.Style),ConfigurationManager.AppSettings["WallpaperFitMode"]), copyright);
                 }
                 catch (Exception ex)
                 {
