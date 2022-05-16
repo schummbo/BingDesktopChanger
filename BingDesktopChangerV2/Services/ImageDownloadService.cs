@@ -14,7 +14,7 @@ namespace BingDesktopChangerV2.Services
         }
 
         [SupportedOSPlatform("windows")]
-        public async Task<Bitmap> GetImage(Uri uri)
+        public async Task<Bitmap> GetImageAsync(Uri uri)
         {
             await using var stream = await httpClient.GetStreamAsync(uri);
             return (Bitmap)Image.FromStream(stream);

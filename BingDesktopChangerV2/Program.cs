@@ -35,7 +35,7 @@ var copyright = imageMetadata.copyright;
 var imageUrlBase = imageMetadata.urlbase;
 var imageUrl = $"http://www.bing.com{imageUrlBase}_{resolution}.jpg";
 
-var image = await new ImageDownloadService().GetImage(new Uri(imageUrl));
+var image = await new ImageDownloadService().GetImageAsync(new Uri(imageUrl));
 
 var imageWithCopyright = new ImageEditorService().AddTextToImage(image, copyright);
 
