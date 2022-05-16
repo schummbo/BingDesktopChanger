@@ -1,15 +1,8 @@
 ﻿using BingDesktopChangerV2.Clients;
 using BingDesktopChangerV2.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
-using var host = Host.CreateDefaultBuilder().Build();
-
-if (host.Services.GetService(typeof(IConfiguration)) is not IConfiguration config)
-{
-    throw new Exception("Unable to get configuration");
-}
-
+var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 string resolution = config["resolution"];
 
 if (string.IsNullOrWhiteSpace(resolution))
