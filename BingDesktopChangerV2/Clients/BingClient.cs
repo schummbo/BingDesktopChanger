@@ -1,5 +1,4 @@
 ﻿using BingDesktopChangerV2.Models;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace BingDesktopChangerV2.Clients
@@ -9,9 +8,9 @@ namespace BingDesktopChangerV2.Clients
         private const string WallpaperUrl = "https://www.bing.com/hpimagearchive.aspx?format=js&idx=0&n=1&mbl=1&mkt=en-ww";
         private readonly HttpClient httpClient;
 
-        public BingClient()
+        public BingClient(HttpClient httpClient)
         {
-            httpClient = new HttpClient();
+            this.httpClient = httpClient;
         }
 
         public async Task<BingWallpaperMetadata?> GetWallPaperMetadataAsync()

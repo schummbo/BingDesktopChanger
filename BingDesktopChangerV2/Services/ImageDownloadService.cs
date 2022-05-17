@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Net;
 using System.Runtime.Versioning;
 
 namespace BingDesktopChangerV2.Services
@@ -8,9 +7,9 @@ namespace BingDesktopChangerV2.Services
     {
         private readonly HttpClient httpClient;
 
-        public ImageDownloadService()
+        public ImageDownloadService(HttpClient httpClient)
         {
-            httpClient = new HttpClient();
+            this.httpClient = httpClient;
         }
 
         [SupportedOSPlatform("windows")]

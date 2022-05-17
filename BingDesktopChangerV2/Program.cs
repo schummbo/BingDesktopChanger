@@ -1,4 +1,5 @@
 ﻿using BingDesktopChangerV2.Clients;
+using BingDesktopChangerV2.Factories;
 using BingDesktopChangerV2.Services;
 using Microsoft.Extensions.Configuration;
 
@@ -10,7 +11,9 @@ if (string.IsNullOrWhiteSpace(resolution))
     throw new Exception("Unable to get resolution from configuration");
 }
 
-var bingWallpaperMetadata = await new BingClient().GetWallPaperMetadataAsync();
+var httpClient = HttpClientFactory.CreateHttpClient();
+
+var bingWallpaperMetadata = await new BingClient(httpClient).GetWallPaperMetadataAsync();
 
 if (bingWallpaperMetadata == null)
 {
@@ -26,9 +29,9 @@ if (imageMetadata == null)
 
 var copyright = imageMetadata.copyright;
 var imageUrlBase = imageMetadata.urlbase;
-var imageUrl = $"http://www.bing.com{imageUrlBase}_{resolution}.jpg";
+var imageUrl = $"https://www.bing.com{imageUrlBase}_{resolution}.jpg";
 
-var image = await new ImageDownloadService().GetImageAsync(new Uri(imageUrl));
+var image = await new ImageDownloadService(httpClient).GetImageAsync(new Uri(imageUrl));
 
 var imageWithCopyright = new ImageEditorService().AddTextToImage(image, copyright);
 
